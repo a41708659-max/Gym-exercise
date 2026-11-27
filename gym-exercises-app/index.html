@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Gym Exercises</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--bg:#0b1220;--card:#131e30;--line:#26364e;--text:#edf2f7;--mute:#9fb0c6;--acc:#35c58a;--acc2:#1fa0ff;--in:#0c1524;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#0b1220}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;padding-bottom:84px}
+.app{max-width:640px;margin:auto;padding:14px}
+.hero{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#16314a,#13283f 60%,#0f3a33);border:1px solid var(--line);border-radius:22px;padding:14px;margin-bottom:12px}
+.logo{width:54px;height:54px;flex:none}
+.hero h1{font-size:19px;margin:0;letter-spacing:.3px}
+.hero small{color:var(--mute)}
+.avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#20324a;border:2px solid var(--acc);margin-inline-start:auto;flex:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:5px 11px;border-radius:30px;background:#164b3b;color:#a8f0d1;font-weight:700}
+.tag.rest{background:#344155;color:#d0d9e5}
+.prog{height:8px;background:var(--line);border-radius:20px;overflow:hidden;margin:10px 0 4px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .3s}
+.mute{color:var(--mute);font-size:13px;line-height:1.7}
+.ex h3{margin:0 0 10px;font-size:16px}
+.set{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid #2b3a50}
+.set b{font-size:13px;color:var(--acc);width:52px}
+.w{display:flex;align-items:center;gap:6px;background:var(--in);border:1px solid #40516a;border-radius:12px;padding:0 10px}
+.w input{width:100%;background:none;border:0;color:#fff;font:inherit;font-size:17px;padding:10px 0;outline:0;text-align:center}
+.w span{color:var(--mute);font-size:12px}
+.rep{display:flex;align-items:center;gap:6px}
+.rep button{width:38px;height:38px;border-radius:12px;border:0;background:#263a55;color:#fff;font-size:22px;font-weight:700}
+.rep button.p{background:#167653}
+.rep output{min-width:30px;text-align:center;font-size:19px;font-weight:800}
+.btn{border:0;border-radius:12px;padding:12px 16px;background:#263a55;color:#f4f7fb;font:inherit;font-weight:700}
+.btn.pri{background:#167653}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:6px 0;line-height:1.6}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--acc);flex:none;margin-top:3px}
+.day{display:flex;align-items:center;gap:10px;padding:15px 0;border-top:1px solid #2b3a50;cursor:pointer;font-size:17px}
+.day:first-of-type{border:0}.day.now{color:var(--acc)}
+.day em{margin-inline-start:auto;font-style:normal;font-size:12px;color:var(--mute)}
+nav{position:fixed;inset:auto 0 0 0;background:#0f1a2b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))}
+nav button{background:none;border:0;color:var(--mute);font:inherit;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 18px;border-radius:12px}
+nav button span{font-size:21px}nav button.on{color:var(--acc);background:#16283d}
+.pf{text-align:center}.pf img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid var(--acc);background:#20324a}
+.pf input[type=text]{width:100%;margin:14px 0;background:var(--in);color:#fff;border:1px solid #40516a;border-radius:12px;padding:13px;font:inherit;font-size:17px;text-align:center}
+.hide{display:none!important}
+.md{position:fixed;inset:0;background:#000b;display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.box{background:var(--card);border-radius:22px 22px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));width:100%;max-width:640px;max-height:88vh;overflow:auto;line-height:1.85}
+.box h3{margin:0 0 6px}.box p{margin:10px 0}.box b.s{color:var(--acc)}
+#rm{position:fixed;top:0;inset-inline:0;z-index:60;background:linear-gradient(90deg,#167653,#1fa0ff);color:#fff;font-weight:800;text-align:center;padding:calc(14px + env(safe-area-inset-top,0px)) 14px 14px;font-size:17px}
+</style>
+</head>
+<body><main class="app">
+<header class="hero">
+<svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#35c58a"/><stop offset="1" stop-color="#1fa0ff"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="#0b1220"/><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="url(#g)" stroke-width="2.5"/><g fill="url(#g)"><rect x="7" y="25" width="5" height="14" rx="2"/><rect x="52" y="25" width="5" height="14" rx="2"/><rect x="13" y="19" width="8" height="26" rx="3"/><rect x="43" y="19" width="8" height="26" rx="3"/><rect x="21" y="30" width="22" height="4" rx="2"/></g></svg>
+<div><h1>Gym Exercises</h1><small id="hello">أهلاً بك</small></div>
+<img class="avatar" id="av" alt="">
+</header>
+
+<section id="t-today" class="hide"><div class="row" style="margin-bottom:12px"><button class="btn" id="back">→ الأسبوع</button><button class="btn" id="reset" style="margin-inline-start:auto">مسح اليوم</button></div>
+<div class="card"><div class="row"><b id="dname" style="font-size:18px"></b><span class="tag" id="dtag"></span></div>
+<div class="prog"><i id="bar"></i></div><div class="mute" id="pt"></div></div>
+<div id="list"></div>
+<div class="card hide" id="cardio"><b>🏃 الكارديو بعد الحديد</b>
+<label class="chk"><input type="checkbox" data-c="0"><span>10 دقائق مشي جبلي بميلان 6-10%</span></label>
+<label class="chk"><input type="checkbox" data-c="1"><span>15 دقيقة مشي سريع بميلان 1-3%</span></label>
+<label class="chk"><input type="checkbox" data-c="2"><span>2-3 دقائق تهدئة</span></label></div>
+<div class="card hide" id="restc"><b>😴 يوم راحة</b><p class="mute">راحة واستشفاء. مشي خفيف اختياري.</p></div>
+</section>
+
+<section id="t-week"><div class="card"><b>جدول الأسبوع</b><p class="mute" style="margin:6px 0 0">اضغط على اليوم لعرض تمارينه</p><div id="wk"></div></div><div class="card"><b>🔔 تذكير الجم</b><p class="mute" id="rs">في أيام التمرين الساعة 6:00 مساءً يظهر تنبيه «حان وقت الذهاب للجم» عند فتح التطبيق.</p><button class="btn pri" id="rb">السماح بالإشعارات</button></div>
+</section>
+
+<section id="t-me" class="hide"><div class="card pf">
+<img id="pimg" alt=""><div style="margin-top:12px"><label class="btn pri" for="file">اختيار صورة</label><input id="file" type="file" accept="image/*" hidden></div>
+<input id="nm" type="text" placeholder="اكتب اسمك" maxlength="30">
+<button class="btn pri" id="save">حفظ</button></div></section>
+</main>
+<div id="rm" class="hide"></div><div class="md hide" id="md"><div class="box" id="mb"></div></div>
+<nav><button data-t="week" class="on"><span>📅</span>الأسبوع</button><button data-t="me"><span>👤</span>حسابي</button></nav>
+<script>
+const FR=["صدر مستوي","صدر علوي","كتف جانبي","تراي","تراي خلف الرأس","تمرين بطن","كتف أمامي","سواعد أمامية — دمبل","سواعد بالبار","أفخاذ خارجية","أفخاذ أمامية"];
+const BK=["ليت بول داون","بلوفر","بكرة ظهر علوي","ظهر سفلي","كتف خلفي","باي بكرة","باي كالس — وسط الباي والتراي","سواعد بكرة","أفخاذ داخلية","كلوز بار","أفخاذ خلفية","تمرين عضلة الكولف"];
+const DAYS=[["الأحد","f"],["الاثنين","b"],["الثلاثاء","f"],["الأربعاء","r"],["الخميس","f"],["الجمعة","r"],["السبت","b"]];
+const TN={f:"أمامي",b:"خلفي",r:"راحة"};
+const $=id=>document.getElementById(id);
+let S={profile:{name:"",photo:""},logs:{}};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem("gymEx")||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem("gymEx",JSON.stringify(S))}catch(e){}};
+let cur=new Date().getDay();const dkOf=i=>{const d=new Date(),n=d.getDay();d.setDate(d.getDate()+((i-5+7)%7)-((n-5+7)%7));return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()};const dk=()=>dkOf(cur);
+const dayLog=k=>S.logs[k]||(S.logs[k]={ex:{},c:[]});
+const ph="data:image/svg+xml,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='#20324a'/><circle cx='32' cy='24' r='11' fill='#6f86a3'/><path d='M10 58c2-14 12-20 22-20s20 6 22 20z' fill='#6f86a3'/></svg>");
+function profile(){const n=S.profile.name;$("hello").textContent=n?"أهلاً، "+n:"أهلاً بك";$("av").src=$("pimg").src=S.profile.photo||ph;$("nm").value=n}
+function today(){
+const i=cur,[nm,t]=DAYS[i],L=dayLog(dk()),list=t==="f"?FR:BK;
+$("dname").textContent=nm;$("dtag").textContent=TN[t];$("dtag").className="tag"+(t==="r"?" rest":"");
+$("restc").classList.toggle("hide",t!=="r");$("cardio").classList.toggle("hide",t==="r");
+$("list").innerHTML=t==="r"?"":list.map((n,x)=>{const e=L.ex[x]||[{},{}];return`<div class="card ex"><h3 data-e="${x}" style="cursor:pointer">${x+1}. ${n} <span style="color:var(--acc);font-size:13px">ⓘ</span></h3>`+[0,1].map(s=>{const v=e[s]||{};return`<div class="set"><b>مجموعة ${s+1}</b><label class="w"><input type="number" inputmode="decimal" min="0" step="0.5" placeholder="0" value="${v.w||""}" data-x="${x}" data-s="${s}"><span>كغم</span></label><div class="rep"><button data-m="${x},${s},-1">−</button><output>${v.r||0}</output><button class="p" data-m="${x},${s},1">+</button></div></div>`}).join("")+`</div>`}).join("");
+document.querySelectorAll("[data-c]").forEach(c=>c.checked=!!L.c[c.dataset.c]);
+prog(list,L,t)}
+function prog(list,L,t){let tot=t==="r"?0:list.length*2,d=0;for(const x in L.ex)L.ex[x].forEach(s=>{if(s&&s.r>0)d++});
+$("bar").style.width=tot?Math.min(100,d/tot*100)+"%":"0";$("pt").textContent=tot?`${d} من ${tot} مجموعات مكتملة`:"لا توجد تمارين اليوم"}
+function setv(x,s,k,v){const L=dayLog(dk());const e=L.ex[x]||(L.ex[x]=[{},{}]);e[s][k]=v;save()}
+$("list").addEventListener("input",e=>{const t=e.target;if(t.dataset.x!=null)setv(t.dataset.x,+t.dataset.s,"w",t.value)});
+$("list").addEventListener("click",e=>{const b=e.target.closest("[data-m]");if(!b)return;const[x,s,d]=b.dataset.m.split(",").map(Number);
+const L=dayLog(dk());const e2=L.ex[x]||(L.ex[x]=[{},{}]);const r=Math.max(0,(e2[s].r||0)+d);setv(x,s,"r",r);
+b.parentNode.querySelector("output").textContent=r;const t=DAYS[cur][1];prog(t==="f"?FR:BK,L,t)});
+document.querySelectorAll("[data-c]").forEach(c=>c.onchange=()=>{dayLog(dk()).c[c.dataset.c]=c.checked;save()});
+function week(){const n=new Date().getDay();$("wk").innerHTML=[5,6,0,1,2,3,4].map(i=>{const[a,t]=DAYS[i],L=S.logs[dkOf(i)];let d=0;if(L)for(const x in L.ex)L.ex[x].forEach(s=>{if(s&&s.r>0)d++});const tot=t==="r"?0:(t==="f"?FR:BK).length*2;return`<div class="day ${i===n?"now":""}" data-d="${i}" role="button"><b>${a}</b><span class="tag ${t==="r"?"rest":""}">${TN[t]}</span><em>${i===n?"اليوم • ":""}${tot?d+"/"+tot:""} ‹</em></div>`}).join("")}
+$("wk").onclick=e=>{const r=e.target.closest("[data-d]");if(!r)return;cur=+r.dataset.d;today();$("t-week").classList.add("hide");$("t-today").classList.remove("hide");scrollTo(0,0)};
+$("back").onclick=()=>document.querySelector('nav button[data-t="week"]').click();
+$("reset").onclick=()=>{if(confirm("مسح أوزان وتكرارات اليوم؟")){delete S.logs[dk()];save();today()}};
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));["today","week","me"].forEach(t=>$("t-"+t).classList.toggle("hide",t!==b.dataset.t));if(b.dataset.t==="week")week()});
+$("file").onchange=e=>{const f=e.target.files[0];if(!f)return;const im=new Image();im.onload=()=>{const c=document.createElement("canvas");c.width=c.height=256;const m=Math.min(im.width,im.height);c.getContext("2d").drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,256,256);S.profile.photo=c.toDataURL("image/jpeg",.85);save();profile()};im.src=URL.createObjectURL(f)};
+$("save").onclick=()=>{S.profile.name=$("nm").value.trim();save();profile();$("save").textContent="تم الحفظ ✓";setTimeout(()=>$("save").textContent="حفظ",1200)};
+const T={f:[
+["press","جهاز ضغط الصدر (أو بنش مستوٍ): اضبط المقعد ليكون المقبضان بمستوى منتصف الصدر، والصق ظهرك وكتفيك بالمسند.","ادفع المقبضين للأمام حتى تمتد الذراعان دون قفل المرفقين، ثم ارجع ببطء خلال 2-3 ثوانٍ حتى تشعر بتمدد الصدر. زفير عند الدفع وشهيق عند الرجوع.","رفع الكتفين نحو الأذنين، أو ارتداد الوزن عن الصدر."],
+["press","جهاز ضغط الصدر العلوي (أو بنش مائل 30-45°): اضبط المقعد ليكون المقبضان عند أعلى الصدر قرب الترقوة.","ادفع للأعلى والأمام بزاوية مائلة حتى امتداد الذراعين، توقف لحظة، ثم ارجع ببطء مع إبقاء الصدر مرفوعاً.","زاوية مائلة فوق 45° تنقل الجهد إلى الكتف، وكذلك تقوس أسفل الظهر."],
+["raise","جهاز الرفرفة الجانبية للكتف: اجلس بظهر ثابت وضع الوسادتين على الجزء الخارجي من الذراع قرب المرفق.","ارفع الذراعين جانباً حتى مستوى الكتفين فقط، ثبّت ثانية، ثم انزل ببطء دون أن تترك الوزن يسقط.","الرفع فوق مستوى الكتف، أو تحريك الجذع لمساعدة الوزن."],
+["ext","جهاز الكابل (Push-down) بمقبض حبل أو بار: قف قريباً من الجهاز والمرفقان ملاصقان للجسم.","ادفع للأسفل حتى تمتد الذراعان بالكامل واعصر الترايسبس ثانية، ثم ارجع حتى زاوية 90° عند المرفق دون رفعه.","تحريك المرفقين للأمام والخلف، أو الاتكاء بالجذع على الوزن."],
+["ext","كابل أو دمبل خلف الرأس: امسك الحبل أو الدمبل خلف الرأس والمرفقان للأعلى بجانب الأذنين.","مدّ الذراعين للأعلى حتى الاستقامة، ثم انزل ببطء خلف الرأس حتى تشعر بتمدد الترايسبس. المرفقان ثابتان طوال الحركة.","فتح المرفقين للخارج، أو تقوس أسفل الظهر مع الوزن الثقيل."],
+["core","جهاز كرنش البطن: اضبط الوزن، اجلس وامسك المقبضين عند الصدر والوركان ثابتان على المقعد.","قوّس الجذع للأمام بتقريب القفص الصدري من الحوض مع زفير، اعصر البطن ثانية، ثم ارجع ببطء دون ترك الوزن.","السحب بالذراعين بدل البطن، أو الحركة من الورك."],
+["press","جهاز ضغط الكتف: اضبط المقعد ليكون المقبضان بمستوى الذقن تقريباً، وظهرك ثابت على المسند.","ادفع للأعلى حتى قرب امتداد الذراعين دون قفل المرفقين، ثم انزل ببطء حتى مستوى الأذنين.","تقوس الظهر، أو إنزال الوزن بسرعة."],
+["curl","سواعد أمامية بدمبل: اجلس وأسند الساعد على الفخذ أو البنش، الكف للأعلى والمعصم خارج الحافة.","أنزل الدمبل بمرونة المعصم ثم اثنِ المعصم للأعلى بأقصى مدى، اعصر الساعد ثانية، وكرر بتحكم.","رفع الساعد عن الإسناد، أو استخدام وزن يمنع المدى الكامل."],
+["curl","سواعد بالبار: اجلس وأسند الساعدين على الفخذين والمعصمان خارج الركبتين، قبضة كف للأعلى.","أنزل البار حتى أطراف الأصابع ثم اثنِ المعصمين للأعلى بالكامل، ثبّت ثانية وانزل ببطء.","الأرجحة بالجذع، وتحريك المرفقين."],
+["legs","جهاز إبعاد الفخذ (Abductor): اجلس بظهر ثابت والوسادتان على الجهة الخارجية للركبتين.","افتح الساقين للخارج ببطء حتى أقصى مدى مريح، توقف ثانية، ثم ارجع بتحكم دون أن تضرب الأوزان.","الاندفاع بسرعة، أو ترك الوزن يعيد الساقين."],
+["legs","جهاز تمديد الساق (Leg Extension): اضبط المسند ليكون الركبة عند محور الجهاز والوسادة فوق الكاحل.","مدّ الساقين حتى الاستقامة دون قفل عنيف، اعصر الفخذ الأمامي ثانية، ثم انزل ببطء 2-3 ثوانٍ.","رفع الورك عن المقعد، أو وزن كبير يجعلك ترتد."]
+],b:[
+["pull","جهاز السحب العلوي (Lat Pulldown): اضبط وسادة الفخذين، وامسك البار بعرض أوسع من الكتفين.","اسحب البار إلى أعلى الصدر مع إخراج الصدر وجمع لوحي الكتف، ثبّت ثانية، ثم ارجع حتى امتداد الذراعين ببطء.","الميل الشديد للخلف، أو السحب خلف الرأس، أو السحب بالذراعين فقط."],
+["pull","بلوفر (Pullover) بجهاز أو كابل: اضبط المقعد ليكون محور الدوران عند الكتف.","اسحب المقبض نحو الورك بذراعين شبه ممدودتين وبقوة الظهر، ثم ارجع ببطء حتى تمدد الظهر.","ثني المرفقين كثيراً فيتحول التمرين إلى ترايسبس."],
+["pull","بكرة ظهر علوي (Seated Row): اجلس بصدر مرتفع وقدماك على المسند والركبتان مرنتان.","اسحب المقبض نحو أسفل الصدر مع جمع لوحي الكتف، ثبّت ثانية، ثم ارجع ببطء حتى تمتد الذراعان.","الأرجحة بالجذع، أو رفع الكتفين."],
+["core","جهاز الظهر السفلي (Back Extension): اضبط الوسادة على أعلى الفخذين والورك عند حافة الوسادة.","انزل بظهر مستقيم ثم ارفع الجذع حتى استقامة الجسم فقط مع زفير، وانزل ببطء.","الإفراط في تقوس الظهر للخلف، أو وزن ثقيل جداً."],
+["pull","جهاز الكتف الخلفي (Reverse Pec Deck): صدرك على الوسادة والذراعان بمستوى الكتفين.","افتح الذراعين للخلف مع جمع لوحي الكتف، ثبّت ثانية، ثم ارجع ببطء.","استخدام الظهر بدل الكتف الخلفي، أو رفع الكتفين."],
+["curl","باي بكرة بالكابل: قف أمام الجهاز والمرفقان ثابتان بجانب الجسم والكفان للأعلى.","اثنِ الذراعين حتى انقباض الباي كاملاً، ثم انزل ببطء كامل حتى الامتداد.","أرجحة الظهر، أو تحريك المرفقين للأمام."],
+["curl","تمرين وسط الباي والتراي على الكابل: ثبّت المرفقين بجانب الجسم بمقبض حبل وقبضة محايدة (مطرقة).","للباي: اثنِ الذراعين للأعلى ببطء. وللتراي: ادفع للأسفل حتى الامتداد. افصل بين الحركتين وتحكم في الرجوع.","استخدام الجسم لمساعدة الحركة، أو وزن يمنع التحكم."],
+["curl","سواعد بالبكرة (كابل): أسند الساعد على سطح ثابت والكف للأعلى والمعصم خارج الحافة.","اثنِ المعصم بالكابل للأعلى بأقصى مدى، ثبّت ثانية، ثم انزل ببطء.","رفع الساعد عن الإسناد، أو وزن ثقيل."],
+["legs","جهاز تقريب الفخذ (Adductor): اجلس بظهر ثابت والوسادتان على الجهة الداخلية للركبتين.","قرّب الساقين ببطء حتى تلتقيا، اعصر الفخذ الداخلي ثانية، ثم افتح بتحكم.","الاندفاع بسرعة، أو فتح مفرط يسبب شداً."],
+["pull","كلوز بار (سحب علوي بمقبض ضيق V-bar): اجلس بوسادة الفخذين مضبوطة وامسك المقبض بقبضة محايدة.","اسحب المقبض إلى أعلى الصدر والمرفقان ملاصقان للجسم، اجمع لوحي الكتف، ثم ارجع ببطء.","الميل للخلف أكثر من اللازم، أو سحب الكتفين للأذنين."],
+["legs","جهاز الفخذ الخلفي (Leg Curl): اضبط الوسادة فوق الكاحل بقليل والركبة عند محور الجهاز.","اثنِ الساقين نحو المؤخرة بالكامل، اعصر الفخذ الخلفي ثانية، ثم ارجع ببطء 2-3 ثوانٍ.","رفع الورك عن المقعد، أو الاندفاع بالوزن."],
+["legs","جهاز عضلة السمانة (Calf Raise): ضع مقدمة القدمين على الحافة والكعبان خارجها والظهر مستقيم.","انزل بالكعبين لتمدد السمانة، ثم ارتفع على أطراف الأصابع بأقصى مدى، ثبّت ثانية وانزل ببطء.","حركة قصيرة سريعة، أو ثني الركبتين."]
+]};
+const P={press:[100,170],pull:[170,100],curl:[0,150],raise:[0,90],ext:[100,180]};
+function fig(a){const r=P[a]||[0,0],l=a==="legs"?[0,-60]:[0,0],an=(x,y,m,p,q)=>`<animateTransform attributeName="transform" type="rotate" values="${m*p} ${x} ${y};${m*q} ${x} ${y};${m*p} ${x} ${y}" dur="2.6s" repeatCount="indefinite"/>`,ln=(x,y,y2,m,p,q)=>`<line x1="${x}" y1="${y}" x2="${x}" y2="${y2}" stroke="#35c58a" stroke-width="6" stroke-linecap="round">${an(x,y,m,p,q)}</line>`;
+const up=`<circle cx="60" cy="28" r="9" fill="#cfe9ff"/><line x1="60" y1="40" x2="60" y2="80" stroke="#1fa0ff" stroke-width="9" stroke-linecap="round"/>${ln(52,46,78,-1,r[0],r[1])}${ln(68,46,78,1,r[0],r[1])}`;
+return`<svg viewBox="0 0 120 120" style="width:170px;height:170px;display:block;margin:8px auto;background:#0c1524;border-radius:16px">${a==="core"?`<g>${up}${an(60,80,1,0,30)}</g>`:up}${ln(54,80,112,-1,l[0],l[1])}${ln(66,80,112,1,l[0],l[1])}</svg><div class="mute" style="text-align:center">رسم متحرك توضيحي لاتجاه الحركة</div>`}
+const V={f:[["bench",2,80,80,0,0,100,10,0,0,0,0,0,0],["mIncl",0,70,70,0,0,100,10,90,90,-25,-25,0,0],["seat",0,0,0,0,85,20,20,90,90,0,0,0,0],["cabH",1,5,5,0,0,100,5,0,0,0,0,0,0],["cabH",1,160,160,0,0,120,10,0,0,0,0,0,0],["mAb",0,40,40,0,0,100,100,90,90,0,35,0,0],["mSh",0,95,165,0,0,90,10,90,90,0,0,0,0],["mPreach",0,50,50,0,0,90,125,90,90,0,0,0,0],["mPreach",0,50,50,0,0,90,125,90,90,0,0,0,0],["mAbd",0,0,0,0,0,0,0,90,90,0,0,0,32],["mHack",3,0,0,0,0,0,0,5,70,0,0,0,0]],b:[["cabH",0,165,45,0,0,10,100,90,90,0,0,0,0],["mPull",0,150,20,0,0,20,20,90,90,0,0,0,0],["cabL",0,85,-10,0,0,5,100,90,90,0,0,0,0],["bext",1,40,40,0,0,110,110,0,0,70,0,0,0],["mPec",0,90,10,0,85,10,10,90,90,0,0,0,0],["mPreach",0,50,50,0,0,5,140,90,90,0,0,0,0],["cabL",1,5,5,0,0,5,140,0,0,0,0,0,0],["cabL",0,40,40,0,0,80,105,90,90,0,0,0,0],["mAbd",0,0,0,0,0,0,0,90,90,0,0,32,0],["cabH",0,165,45,0,0,10,100,90,90,0,0,0,0],["lying",4,0,0,0,0,0,0,0,100,0,0,0,0],["calf",1,0,0,0,0,0,0,0,0,0,0,0,0]]};
+const PY={cabH:1.85,cabL:.25,cabM:.55},v3=(x,y,z)=>new THREE.Vector3(x,y,z);
+const mat=(c,mt=.15,rg=.65)=>new THREE.MeshStandardMaterial({color:c,metalness:mt,roughness:rg});
+const sh=o=>{o.castShadow=o.receiveShadow=true;return o};
+const box=(w,h,d,x,y,z,c,rx,mt,rg)=>{const o=sh(new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c,mt,rg)));o.position.set(x,y,z);if(rx)o.rotation.x=rx;return o};
+const cyl=(a,b,l,c,mt,rg)=>sh(new THREE.Mesh(new THREE.CylinderGeometry(a,b,l,16),mat(c,mt,rg)));
+const sph=(r,c,x,y,z)=>{const o=sh(new THREE.Mesh(new THREE.SphereGeometry(r,16,12),mat(c)));o.position.set(x||0,y||0,z||0);return o};
+const limb=(l,a,b,c)=>{const o=cyl(a,b,l,c);o.position.y=-l/2;return o};
+function link(o,a,b){const d=b.clone().sub(a),l=d.length()||.001;o.position.copy(a).add(b).multiplyScalar(.5);o.scale.y=l;o.quaternion.setFromUnitVectors(v3(0,1,0),d.normalize())}
+const tube=(a,b,r,c)=>{const o=cyl(r,r,1,c,.85,.3);link(o,v3(...a),v3(...b));return o};
+function tower(sc,st,z){const D=0x1d2a3d,PL=0x8c9bb0;sc.add(box(.56,2,.06,0,1,z-.14,D,0,.5,.5));[-.25,.25].forEach(x=>sc.add(tube([x,.05,z],[x,1.95,z],.014,0xcfd8e3)));sc.add(box(.6,.08,.34,0,2,z,D,0,.5,.5));
+for(let i=0;i<9;i++){const p=box(.44,.07,.22,0,.12+i*.105,z,PL,0,.7,.35);(i>=4?st:sc).add(p)}
+sc.add(box(.07,.05,.3,0,.12+4*.105-.05,z+.12,0xe5484d))}
+function mach(m,po,sc){const D=0x1d2a3d,K=0x14171c,CH=0xcfd8e3,st=new THREE.Group(),cb=m.slice(0,3)==="cab";sc.add(st);
+const A=o=>(sc.add(o),o),pad=(w,h,d,x,y,z,r)=>A(box(w,h,d,x,y,z,K,r,.05,.95)),fr=(w,h,d,x,y,z,r)=>A(box(w,h,d,x,y,z,D,r,.6,.4)),tb=(a,b,r)=>A(tube(a,b,r||.025,CH));
+sc.add(box(2.6,.04,2.6,0,-.02,0,0x131c2b,0,.1,.9));sc.add(new THREE.GridHelper(2.6,13,0x2b3a50,0x1b2a40));
+const rack=()=>{[-.45,.45].forEach(x=>{fr(.07,1.2,.07,x,.6,-.55);fr(.07,.07,.2,x,1.05,-.45)});fr(.07,.07,.9,0,.04,-.55)};
+if(m==="bench"){pad(.42,.12,1.8,0,.42,.02);[.7,-.7].forEach(z=>[-.12,.12].forEach(x=>fr(.07,.36,.07,x,.18,z)));rack()}
+if(m==="incl"){pad(.42,.12,.46,0,.42,.15);pad(.42,.1,.95,0,.84,-.3,-.7);fr(.08,.36,.08,0,.18,.2);fr(.08,.5,.08,0,.3,-.4,-.7);rack()}
+if(m==="seat"||(po===0&&cb)){pad(.44,.11,.46,0,.41,.05);fr(.1,.36,.1,0,.18,.05);fr(.5,.05,1,0,.03,-.1)}
+if(m==="seat"){pad(.42,.65,.1,0,.82,-.22,-.12);[-.3,.3].forEach(x=>fr(.07,1.5,.07,x,.75,-.38));fr(.7,.07,.07,0,1.5,-.38);tower(sc,st,-.8)}
+if(cb){tower(sc,st,-.72);const w=A(cyl(.08,.08,.05,CH,.9,.3));w.rotation.z=Math.PI/2;w.position.set(0,PY[m],-.45);tb([0,PY[m],-.45],[0,PY[m]+.15,-.62],.02);fr(.8,.04,1.1,0,.02,-.15)}
+if(m==="lying"){pad(.42,.12,1.8,0,.36,0,0);[.8,-.8].forEach(z=>fr(.4,.3,.07,0,.15,z));fr(.7,.04,1.9,0,.03,0)}
+if(m==="calf"){fr(.7,.1,.5,0,.05,0);pad(.5,.12,.3,0,1.52,0);[-.3,.3].forEach(x=>fr(.07,1.5,.07,x,.75,0));fr(.7,.07,.07,0,1.5,0)}
+const RD=0xd62828,GR=0xb8bcc2,BL=0x15171a,PU=0x7a2fa0,WH=0xf2f2f2,rp=(w,h,d,x,y,z,r)=>A(box(w,h,d,x,y,z,RD,r,.1,.28)),gf=(w,h,d,x,y,z,r)=>A(box(w,h,d,x,y,z,GR,r,.7,.35)),bf=(w,h,d,x,y,z,r)=>A(box(w,h,d,x,y,z,BL,r,.5,.5)),pu=(w,h,d,x,y,z,r)=>A(box(w,h,d,x,y,z,PU,r,.3,.4)),wf=(w,h,d,x,y,z,r)=>A(box(w,h,d,x,y,z,WH,r,.2,.4)),pl=(x,y,z,r)=>{const o=A(cyl(r,r,.05,0x1a1a1f,.3,.6));o.rotation.z=Math.PI/2;o.position.set(x,y,z)};
+if(m==="mIncl"){rp(.42,.55,.1,0,.95,-.32,-.45);rp(.18,.2,.08,0,1.3,-.5,-.45);rp(.36,.1,.4,0,.41,.05);bf(.08,.4,.08,0,.2,.05);[-.42,.42].forEach(x=>{bf(.07,1.4,.07,x,.7,-.42);pl(x*1.5,.6,-.15,.2);bf(.45,.06,.06,x*1.2,.6,-.15)});bf(1,.07,.07,0,1.4,-.42);bf(.95,.05,1,0,.03,-.1)}
+if(m==="mSh"){rp(.4,.75,.1,0,.85,-.22,-.1);rp(.4,.1,.46,0,.41,.05);gf(.7,.05,.9,0,.03,0);gf(.08,.36,.08,0,.2,.05);[-.4,.4].forEach(x=>{gf(.1,1.5,.1,x,.75,-.38);bf(.3,.7,.3,x*1.25,.4,-.55)});gf(.9,.07,.07,0,1.45,-.38)}
+if(m==="mAb"){rp(.4,.5,.1,0,1.02,-.26);rp(.36,.14,.14,0,.7,-.2);rp(.46,.1,.5,0,.41,.05);gf(.08,.36,.08,0,.2,.05);gf(.7,.05,1,0,.03,-.1);[-.34,.34].forEach(x=>gf(.07,1.2,.07,x,.6,-.35));gf(.75,.07,.07,0,1.2,-.35);tower(sc,st,-.85)}
+if(m==="mPreach"){rp(.5,.1,.5,0,.95,.3,.55);rp(.4,.1,.4,0,.41,-.05);bf(.5,.75,.3,0,.45,.42);bf(.07,.4,.07,0,.2,-.05);bf(.6,.04,.9,0,.02,.1);A(tube([0,.4,.45],[0,.7,.55],.012,CH))}
+if(m==="mAbd"){rp(.4,.1,.46,0,.41,.05);rp(.38,.95,.1,0,.9,-.22,-.1);pu(.06,.4,.06,0,.2,.05);pu(.7,.05,.9,0,.03,0);[-.36,.36].forEach(x=>{pu(.06,.9,.06,x,.5,-.2);bf(.04,.04,.3,x*.8,.62,.15)})}
+if(m==="mHack"){rp(.4,.95,.1,0,1.25,-.26,-.7);[-.2,.2].forEach(x=>{rp(.14,.16,.12,x,1.52,-.4,-.7);bf(.04,.04,.4,x*1.6,1.1,-.1)});gf(.6,.05,.5,0,.27,.58,.55);[-.35,.35].forEach(x=>{A(tube([x,.03,.95],[x,1.75,-.5],.04,GR));pl(x*1.4,.15,.55,.2)});gf(.8,.05,.9,0,.02,.3)}
+if(m==="mPull"){rp(.42,.85,.1,0,.9,-.22,-.15);rp(.28,.18,.1,0,1.42,-.26);rp(.44,.1,.46,0,.41,.05);gf(.08,.36,.08,0,.2,.05);[-.45,.45].forEach(x=>{gf(.09,1.75,.09,x,.87,-.32);rp(.1,.18,.16,x*.85,1.25,.05);pl(x*1.1,.3,-.3,.22)});gf(1,.08,.08,0,1.75,-.32);gf(1,.05,.9,0,.03,-.1)}
+if(m==="mPec"){wf(.08,1.7,.08,.45,.85,-.2);wf(.08,1.7,.08,-.45,.85,-.2);wf(1,.08,.1,0,1.7,-.2);wf(.5,.06,.6,0,.03,0);const c=A(cyl(.13,.13,.7,RD,.1,.28));c.position.set(0,.9,.3);rp(.4,.1,.4,0,.41,-.05);rp(.1,.1,.1,0,.8,.02)}
+if(m==="bext"){gf(.08,.9,.08,.18,.45,.3);gf(.08,.9,.08,-.18,.45,.3);gf(.5,.05,.9,0,.03,.3);[-.2,.2].forEach(x=>rp(.2,.28,.16,x,.9,.25));[-.12,.12].forEach(x=>{const r=A(cyl(.06,.06,.2,RD,.1,.3));r.rotation.z=Math.PI/2;r.position.set(x,.3,.1)})}
+return st}
+function mkP(){const SK=0xe0b48c,TS=0x1fa0ff,SH=0x35c58a,root=new THREE.Group(),tor=new THREE.Group();root.add(tor);
+const t=cyl(.2,.15,.54,TS,.05,.8);t.scale.z=.62;t.position.y=.27;tor.add(t);tor.add(sph(.075,TS,.22,.47,0),sph(.075,TS,-.22,.47,0));
+const nk=cyl(.045,.05,.1,SK);nk.position.y=.58;tor.add(nk);const hd=sph(.105,SK,0,.68,0);hd.scale.y=1.12;tor.add(hd);const hr=sph(.108,0x2a1d14,0,.7,-.015);hr.scale.set(1,.78,1.05);tor.add(hr);
+const pv=cyl(.17,.16,.2,SH);pv.scale.z=.65;root.add(pv);
+const arm=x=>{const g=new THREE.Group(),f=new THREE.Group();g.position.set(x,.47,0);g.add(limb(.28,.055,.045,SK));g.add(limb(.12,.062,.06,TS));g.add(sph(.046,SK,0,-.28,0));f.position.y=-.28;f.add(limb(.26,.045,.036,SK));f.add(sph(.045,SK,0,-.27,0));const h=cyl(.02,.02,.17,0xe5e9ef,.9,.3);h.rotation.z=Math.PI/2;h.position.y=-.27;f.add(h);g.add(f);tor.add(g);return[g,f]};
+const leg=x=>{const t=new THREE.Group(),s=new THREE.Group();t.position.x=x;t.add(limb(.42,.08,.062,SK));t.add(limb(.22,.088,.082,SH));t.add(sph(.06,SK,0,-.42,0));s.position.y=-.42;s.add(limb(.42,.056,.04,SK));s.add(box(.1,.07,.25,0,-.44,.06,0xf2f5fa,0,.05,.7));t.add(s);root.add(t);return[t,s]};
+const a1=arm(.25),a2=arm(-.25),l1=leg(.1),l2=leg(-.1);return{root,tor,aR:a1[0],aL:a2[0],fR:a1[1],fL:a2[1],tR:l1[0],tL:l2[0],sR:l1[1],sL:l2[1]}}
+function mk3(host,v,a){if(typeof THREE==="undefined"){host.innerHTML=fig(a);return()=>{}}
+const w=host.clientWidth||300,h=host.clientHeight||270,sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(38,w/h,.1,50),rd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rd.setPixelRatio(Math.min(devicePixelRatio||1,2));rd.setSize(w,h);rd.shadowMap.enabled=true;host.appendChild(rd.domElement);
+sc.add(new THREE.HemisphereLight(0xdbe8ff,0x101826,.85));const dl=new THREE.DirectionalLight(0xffffff,.9);dl.position.set(2.5,4,3);dl.castShadow=true;dl.shadow.mapSize.set(1024,1024);const c2=dl.shadow.camera;c2.left=c2.bottom=-2.2;c2.right=c2.top=2.2;sc.add(dl);
+const[m,po,sx0,sx1,sz0,sz1,e0,e1,k0,k1,tl0,tl1,h0,h1]=v,st=mach(m,po,sc),P=mkP();sc.add(P.root);if(m==="bext"){const q=cyl(.16,.16,.04,0x1a1a1f,.3,.6);q.rotation.x=Math.PI/2;q.position.set(0,.36,.13);P.tor.add(q)}if(m==="mAbd")[P.tR,P.tL].forEach((t,i)=>t.add(box(.07,.28,.2,(i?-1:1)*.1,-.25,0,RD,0,.1,.3)));
+const cb=m.slice(0,3)==="cab",dy=[],wp=(f,y)=>f.localToWorld(v3(0,y,0)),dyn=(r,c,A,B)=>{const o=cyl(r,r,1,c,.5,.5);sc.add(o);dy.push([o,A,B])},hR=()=>wp(P.fR,-.27),hL=()=>wp(P.fL,-.27);
+if(cb)[1,-1].forEach(s=>dyn(.006,0xffd166,()=>v3(s*.1,PY[m],-.45),s>0?hR:hL));
+const arms=sx0!==sx1||e0!==e1||sz0!==sz1,legs=k0!==k1||h0!==h1;
+if((m==="seat"||m[0]==="m")&&arms&&m!=="mPreach")[1,-1].forEach(s=>dyn(.02,0xcfd8e3,()=>v3(s*.3,1,-.34),s>0?hR:hL));
+if((m==="seat"||m==="lying")&&legs)[P.sR,P.sL].forEach(s=>{const p=cyl(.05,.05,.16,0x14171c);p.rotation.z=Math.PI/2;p.position.y=-.36;s.add(p)});
+let bb=null;if(m==="bench"||m==="incl"||m==="mPreach"||cb){const bl=m==="bench"||m==="incl"?1.7:m==="mPreach"?.6:m==="cabH"?1:.5;bb=new THREE.Group();const br=cyl(.016,.016,bl,0xcfd8e3,.9,.3);br.rotation.z=Math.PI/2;bb.add(br);(bl>1.5?[1,-1]:[]).forEach(s=>{const p=cyl(.17,.17,.045,0x1a1a1f,.3,.6);p.rotation.z=Math.PI/2;p.position.x=s*.7;bb.add(p)});sc.add(bb)}
+let ang=.7,dn=0,lx=0,id=0;const t0=performance.now();
+host.onpointerdown=e=>{dn=1;lx=e.clientX};host.onpointermove=e=>{if(dn){ang+=(e.clientX-lx)*.01;lx=e.clientX}};host.onpointerup=host.onpointerleave=()=>dn=0;
+function loop(now){const t=(1-Math.cos((now-t0)/1000*2.4))/2,L=(p,q)=>(p+(q-p)*t)*Math.PI/180;
+P.tor.rotation.x=L(tl0,tl1);[P.aR,P.aL].forEach((g,i)=>{g.rotation.order="ZXY";g.rotation.x=-L(sx0,sx1);g.rotation.z=(i?-1:1)*L(sz0,sz1)});
+[P.fR,P.fL].forEach(f=>f.rotation.x=-L(e0,e1));[P.tR,P.tL].forEach((g,i)=>{g.rotation.order="YXZ";g.rotation.x=po===0?-Math.PI/2:0;g.rotation.y=(i?-1:1)*L(h0,h1)});[P.sR,P.sL].forEach(s=>s.rotation.x=L(k0,k1));
+const R=P.root;R.rotation.x=po===2?-Math.PI/2:po===3?-.7:po===4?Math.PI/2:0;R.position.set(0,po===0?.53:po===1?.86+(m==="calf"?.1+.06*t:0):po===3?(m==="mHack"?.95:.55):po===2?.55:.5,0);
+sc.updateMatrixWorld(true);dy.forEach(d=>link(d[0],d[1](),d[2]()));if(bb)bb.position.copy(hR().add(hL()).multiplyScalar(.5));st.position.y=t*.14;
+if(!dn)ang+=.004;cam.position.set(Math.sin(ang)*3.4,1.6,Math.cos(ang)*3.4);cam.lookAt(0,.75,0);rd.render(sc,cam);id=requestAnimationFrame(loop)}
+loop(t0);return()=>{cancelAnimationFrame(id);rd.dispose();host.innerHTML=""}}
+const VID={f:{},b:{0:"5s6KGLTMgoI"}};
+const vid=(t,x)=>{const d=VID[t][x];if(!d)return"";return`<div style="position:relative;width:min(100%,260px);aspect-ratio:9/16;margin:8px auto;border-radius:16px;overflow:hidden;background:#000"><iframe src="https://www.youtube.com/embed/${d}?autoplay=1&mute=1&loop=1&playlist=${d}&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0&iv_load_policy=3" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;inset:0;width:100%;height:100%;border:0;transform:scale(1.18);pointer-events:none"></iframe><div style="position:absolute;inset:0"></div></div>`};
+let S3=0;const M=$("md"),MB=$("mb"),openM=h=>{if(S3){S3();S3=0}MB.innerHTML=h;M.classList.remove("hide")},closeM=()=>{if(S3){S3();S3=0}M.classList.add("hide")};
+M.onclick=e=>{if(e.target===M)closeM()};
+$("list").addEventListener("click",e=>{const h=e.target.closest("[data-e]");if(!h)return;const t=DAYS[cur][1],x=+h.dataset.e,n=(t==="f"?FR:BK)[x];
+openM(`<h3>${n}</h3><p class="mute">هل تريد تعلم طريقة أداء هذا التمرين؟</p><div class="row"><button class="btn pri" id="y">نعم</button><button class="btn" id="n">لا</button></div>`);
+$("n").onclick=closeM;$("y").onclick=()=>{const[a,s,p,m]=T[t][x];openM(`<h3>${n}</h3>${vid(t,x)}<div id="v3" style="${VID[t][x]?"display:none;":""}height:270px;margin:8px 0 4px;border-radius:16px;background:#0c1524;touch-action:none;overflow:hidden"></div>${VID[t][x]?"":`<div class="mute" style="text-align:center">مجسم ثلاثي الأبعاد للجهاز والحركة — اسحب بإصبعك لتدويره</div>`}<p><b class="s">الجهاز والضبط</b><br>${s}</p><p><b class="s">طريقة الأداء</b><br>${p}</p><p><b class="s">أخطاء شائعة</b><br>${m}</p><button class="btn" id="c" style="width:100%">إغلاق</button>`);$("c").onclick=closeM;if(!VID[t][x])S3=mk3($("v3"),V[t][x],a)}});
+function fire(){const m="حان وقت الذهاب للجم 🏋️";$("rm").textContent=m;$("rm").classList.remove("hide");try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}try{if("Notification"in window&&Notification.permission==="granted")new Notification("Gym Exercises",{body:m})}catch(e){}}
+function chk(){const d=new Date();if(DAYS[d.getDay()][1]==="r"||d.getHours()!==18)return;const k="gymN"+dkOf(d.getDay());try{if(localStorage.getItem(k))return;localStorage.setItem(k,"1")}catch(e){}fire()}
+$("rm").onclick=()=>$("rm").classList.add("hide");
+$("rb").onclick=async()=>{try{await Notification.requestPermission()}catch(e){}$("rs").textContent="تم. سيظهر التنبيه الساعة 6:00 مساءً في أيام التمرين عند فتح التطبيق."};
+setInterval(chk,20000);chk();
+profile();today();week();
+if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+</body></html>
